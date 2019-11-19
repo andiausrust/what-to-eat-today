@@ -9,7 +9,9 @@
 <ion-content>
   <ion-grid *ngIf="meals$ | async as meals">
     <ion-row>
-      <ion-col *ngFor="let meal of meals" size="6">
+      <ion-col *ngFor="let meal of meals" size="6"
+        [routerLink]="['/meal', meal.idMeal]"
+        router-direction="forward">
         <img [src]="meal.strMealThumb" />
       </ion-col>
     </ion-row>

@@ -2,31 +2,17 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {BehaviorSubject, forkJoin, Observable} from 'rxjs';
+import {MEALDB_Category, MEALDB_ListItem, MEALDB_Meal} from './model';
 
 export const MEALDB_API = {
-    ROOT: `https://www.themealdb.com/api/json/v1/1/`,
+    ROOT: 'https://www.themealdb.com/api/json/v1/1/',
     get FILTER() {
         return this.ROOT + 'filter.php';
+    },
+    get LOOKUP() {
+        return this.ROOT + 'lookup.php';
     }
 };
-
-export enum MEALDB_Category {
-    'Beef' = 'Beef',
-    'Chicken' = 'Chicken',
-    'Lamb' = 'Lamb',
-    'Pasta' = 'Pasta',
-    'Pork' = 'Pork',
-    'Seafood' = 'Seafood',
-    'Starter' = 'Starter',
-    'Vegetarian' = 'Vegetarian'
-}
-
-// tslint:disable-next-line:class-name
-export interface MEALDB_ListItem {
-    idMeal: string;
-    strMeal: string;
-    strMealThumb: string;
-}
 
 @Injectable({
     providedIn: 'root'
@@ -80,5 +66,10 @@ export class MealdbApiService {
             results.push(array[randomIndex]);
         }
         return results;
+    }
+
+    getMealById(id: string): Observable<MEALDB_Meal> {
+        return this.http.get(`${MEALDB_API.LOOKUP}?i=${id}`)
+            .pipe(map((res: {meals: MEALDB_Meal[]}) => res.meals[0]));
     }
 }
